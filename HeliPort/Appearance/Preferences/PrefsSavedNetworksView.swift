@@ -167,7 +167,7 @@ class PrefsSavedNetworksView: NSView {
 // MARK: Action Items
 
 extension PrefsSavedNetworksView {
-    
+
     @objc func modifyItemClicked(_ sender: NSSegmentedControl) {
         let selectedSegment = sender.selectedSegment
         switch selectedSegment {
