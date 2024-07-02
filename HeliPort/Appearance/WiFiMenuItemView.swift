@@ -60,14 +60,11 @@ class WifiMenuItemView: NSView {
     private let lockImage: NSImageView = {
         let lockImage = NSImageView()
         lockImage.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-
-        if #available(OSX 11.0, *) {
-            lockImage.image = NSImage(named: NSImage.lockLockedTemplateName)?
-                              .withSymbolConfiguration(NSImage.SymbolConfiguration(pointSize: 14,
-                                                                                   weight: .semibold,
-                                                                                   scale: .medium))
-        } else {
-            lockImage.image = NSImage(named: NSImage.lockLockedTemplateName)
+        
+        if let lockIcon = NSImage(named: "LockIcon") {
+            lockIcon.isTemplate = true
+            lockIcon.size = NSSize(width: 18, height: 18)
+            lockImage.image = lockIcon
         }
 
         return lockImage
@@ -112,14 +109,23 @@ class WifiMenuItemView: NSView {
     // MARK: Public
 
     public var networkInfo: NetworkInfo {
-        willSet(networkInfo) {
-            ssidLabel.stringValue = networkInfo.ssid
-            lockImage.isHidden = networkInfo.auth.security == ITL80211_SECURITY_NONE
-            signalImage.image = StatusBarIcon.getRssiImage(Int16(networkInfo.rssi))
-            layoutSubtreeIfNeeded()
-        }
-    }
+            willSet(networkInfo) {
+                ssidLabel.stringValue = networkInfo.ssid
+                let maxLength = 25
+                let ssid = networkInfo.ssid
+                if ssid.count > maxLength {
+                    let truncatedSSID = ssid.prefix(maxLength) + "..."
+                    ssidLabel.stringValue = String(truncatedSSID)
+                } else {
+                    ssidLabel.stringValue = ssid
+                }
 
+                lockImage.isHidden = networkInfo.auth.security == ITL80211_SECURITY_NONE
+                signalImage.image = StatusBarIcon.getRssiImage(Int16(networkInfo.rssi))
+                layoutSubtreeIfNeeded()
+            }
+    }
+    
     public var visible: Bool = true {
         willSet(visible) {
             isHidden = !visible
@@ -180,21 +186,20 @@ class WifiMenuItemView: NSView {
         heightConstraint.priority = NSLayoutConstraint.Priority(rawValue: 1000)
         heightConstraint.isActive = true
 
-        statusImage.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        statusImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: statusPadding).isActive = true
-        statusImage.widthAnchor.constraint(equalToConstant: statusWidth).isActive = true
+        signalImage.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        signalImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: statusPadding).isActive = true
+        signalImage.widthAnchor.constraint(equalToConstant: 18).isActive = true
 
         ssidLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        ssidLabel.leadingAnchor.constraint(equalTo: statusImage.trailingAnchor, constant: 3).isActive = true
+        ssidLabel.leadingAnchor.constraint(equalTo: signalImage.trailingAnchor, constant: 3).isActive = true
 
-        lockImage.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        lockImage.leadingAnchor.constraint(equalTo: ssidLabel.trailingAnchor, constant: 10).isActive = true
+        lockImage.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 1).isActive = true
+        lockImage.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -12).isActive = true
         lockImage.widthAnchor.constraint(equalToConstant: lockWidth).isActive = true
 
-        signalImage.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 1).isActive = true
-        signalImage.leadingAnchor.constraint(equalTo: lockImage.trailingAnchor, constant: 12).isActive = true
-        signalImage.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -12).isActive = true
-        signalImage.widthAnchor.constraint(equalToConstant: 18).isActive = true
+        statusImage.centerXAnchor.constraint(equalTo: lockImage.centerXAnchor).isActive = true
+        statusImage.centerYAnchor.constraint(equalTo: lockImage.centerYAnchor).isActive = true
+        statusImage.widthAnchor.constraint(equalToConstant: statusWidth).isActive = true
 
         effectView.translatesAutoresizingMaskIntoConstraints = false
         effectView.subviews.forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
