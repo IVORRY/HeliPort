@@ -15,13 +15,13 @@
 
 import Foundation
 import Cocoa
-import Sparkle
+import Sparkle.SPUStandardUpdaterController
 
 final class StatusMenu: NSMenu, NSMenuDelegate {
 
     // - MARK: Properties
 
-    private let heliPortUpdater = SUUpdater()
+    private let heliPortUpdater = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
 
     private let networkListUpdatePeriod: Double = 5
     private let statusUpdatePeriod: Double = 2
