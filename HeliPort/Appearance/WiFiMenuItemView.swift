@@ -125,7 +125,7 @@ class WifiMenuItemView: NSView {
                 layoutSubtreeIfNeeded()
             }
     }
-    
+
     public var visible: Bool = true {
         willSet(visible) {
             isHidden = !visible
