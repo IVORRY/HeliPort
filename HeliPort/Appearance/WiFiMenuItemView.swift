@@ -60,7 +60,7 @@ class WifiMenuItemView: NSView {
     private let lockImage: NSImageView = {
         let lockImage = NSImageView()
         lockImage.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        
+
         if let lockIcon = NSImage(named: "LockIcon") {
             lockIcon.isTemplate = true
             lockIcon.size = NSSize(width: 18, height: 18)

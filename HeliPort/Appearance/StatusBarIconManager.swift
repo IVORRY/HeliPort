@@ -89,7 +89,7 @@ class StatusBarIcon: NSObject {
         DispatchQueue.main.async {
             StatusBarIcon.count -= 1
             var newImage: NSImage?
-            
+
             switch StatusBarIcon.count {
             case 5:
                 newImage = #imageLiteral(resourceName: "WiFiStateScanning1")
