@@ -48,10 +48,11 @@ final class StatusMenu: NSMenu, NSMenuDelegate {
 
             statusItem.title = NSLocalizedString(status.description)
 
-            // if state changes when connected it will
-            // disconnect to ensure the functionality
-            // of Auto Join(i.e. prevents it from reconnecting to a network with Auto Join disabled)
+            // if status changes while connected, it will
+            // disconnect to ensure Auto Join functionality
+            // (i.e., preventing it from reconnecting to a network with Auto Join disabled)
             if previousStatus == ITL80211_S_RUN && status != ITL80211_S_RUN {
+                Log.debug("Status changed while connected to a network")
                 disassociateSSID(disconnectItem)
                 NetworkManager.scanSavedNetworks()
             }
@@ -449,15 +450,7 @@ final class StatusMenu: NSMenu, NSMenuDelegate {
             }
         case .turnWiFiOn:
             power_on()
-            // try to connect saved networks
-            // NetworkManager.scanSavedNetworks()
         case .turnWiFiOff:
-            // If connected, disconnect from the
-            // network before call `power_off()` to ensure
-            // the functionality of AutoJoin(i.e. prevents it from reconnecting to a network with Auto Join disabled)
-            /*if self.status == ITL80211_S_RUN {
-             *   disassociateSSID(disconnectItem)
-            }*/
             power_off()
         case .joinNetworks:
             let joinPop = WiFiConfigWindow()
