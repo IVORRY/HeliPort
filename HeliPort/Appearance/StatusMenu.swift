@@ -34,7 +34,7 @@ final class StatusMenu: NSMenu, NSMenuDelegate {
     private var networkListUpdateTimer: Timer?
     private var statusUpdateTimer: Timer?
 
-    // Lazy initialization of preferenceWindow as a non-optional
+    // One instance at a time
     private lazy var preferenceWindow = PrefsWindow()
 
     private var previousStatus: itl_80211_state = ITL80211_S_INIT
