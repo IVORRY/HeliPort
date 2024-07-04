@@ -53,6 +53,7 @@ final class StatusMenu: NSMenu, NSMenuDelegate {
             // of Auto Join(i.e. prevents it from reconnecting to a network with Auto Join disabled)
             if previousStatus == ITL80211_S_RUN && status != ITL80211_S_RUN {
                 disassociateSSID(disconnectItem)
+                NetworkManager.scanSavedNetworks()
             }
 
             switch status {
@@ -449,14 +450,14 @@ final class StatusMenu: NSMenu, NSMenuDelegate {
         case .turnWiFiOn:
             power_on()
             // try to connect saved networks
-            NetworkManager.scanSavedNetworks()
+            // NetworkManager.scanSavedNetworks()
         case .turnWiFiOff:
             // If connected, disconnect from the
             // network before call `power_off()` to ensure
             // the functionality of AutoJoin(i.e. prevents it from reconnecting to a network with Auto Join disabled)
-            if self.status == ITL80211_S_RUN {
-                disassociateSSID(disconnectItem)
-            }
+            /*if self.status == ITL80211_S_RUN {
+             *   disassociateSSID(disconnectItem)
+            }*/
             power_off()
         case .joinNetworks:
             let joinPop = WiFiConfigWindow()
