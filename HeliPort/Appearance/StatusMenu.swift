@@ -34,7 +34,7 @@ final class StatusMenu: NSMenu, NSMenuDelegate {
     private var networkListUpdateTimer: Timer?
     private var statusUpdateTimer: Timer?
 
-    private var isTemporaryDisableNeededCondition: Bool = false
+    private var isDisconnecting: Bool = false
 
     // One instance at a time
     private lazy var preferenceWindow = PrefsWindow()
@@ -53,7 +53,7 @@ final class StatusMenu: NSMenu, NSMenuDelegate {
             // if status changes while connected, it will
             // disconnect to ensure Auto Join functionality
             // (i.e., preventing it from reconnecting to a network with Auto Join disabled)
-            if previousStatus == ITL80211_S_RUN && status != ITL80211_S_RUN && !isTemporaryDisableNeededCondition {
+            if previousStatus == ITL80211_S_RUN && status != ITL80211_S_RUN && !isDisconnecting {
                 Log.debug("Status changed while connected to a network")
                 disassociateSSID(disconnectItem)
                 NetworkManager.scanSavedNetworks()
@@ -625,17 +625,15 @@ final class StatusMenu: NSMenu, NSMenuDelegate {
                                                              options: .regularExpression,
                                                              range: nil)
 
-        Log.debug("Temporary disabling line 56 for 3 seconds")
-        isTemporaryDisableNeededCondition = true
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            self.isTemporaryDisableNeededCondition = false
-            Log.debug("Line 56 re-enabled after 3 seconds")
-        }
-
+        Log.debug("Temporary disabling line 56 for 2 seconds")
+        isDisconnecting = true
         DispatchQueue.global().async {
             dis_associate_ssid(ssid)
-            Log.debug("Disconnected from \(ssid)")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                self.isDisconnecting = false
+                Log.debug("Disconnected from \(ssid)")
+                Log.debug("Line 56 re-enabled after 2 seconds")
+            }
         }
     }
 
