@@ -98,13 +98,14 @@ class BugReporter {
 
         if appLog == .heliportCouldNotGetLogs || appLog == .scriptFailed {
             DispatchQueue.main.async {
-                CriticalAlert(message: NSLocalizedString("Error occurred while generating bug report."),
+                let alert = CriticalAlert(message: NSLocalizedString("Error occurred while generating bug report."),
                               informativeText: appLog == .heliportCouldNotGetLogs ?
                                 NSLocalizedString("Could not generate report for HeliPort.") :
                                 NSLocalizedString("Command failed to fetch logs for HeliPort."),
                               options: [NSLocalizedString("Dismiss")],
-                              errorText: appLog)
-                    .show()
+                              errorText: appLog
+                )
+                alert.show()
             }
             return
         }
