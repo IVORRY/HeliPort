@@ -193,8 +193,10 @@ class BugReporter {
                     guard folderUrl != nil else {
                         Log.error("Could not get path to store bug report.")
                         DispatchQueue.main.async {
-                            CriticalAlert(message: NSLocalizedString("Could not get path to generate bug report."),
-                                          options: ["Dismiss"]).show()
+                            let alert = CriticalAlert(message: NSLocalizedString("Could not get path to generate bug report."),
+                                                      options: ["Dismiss"]
+                            )
+                            alert.show()
                         }
                         return
                     }
@@ -226,8 +228,10 @@ class BugReporter {
                     guard outputExitCode == 0 else {
                         Log.error("Could not create zip file: Exit code: \(outputExitCode)")
                         DispatchQueue.main.async {
-                            CriticalAlert(message: NSLocalizedString("Could not create zip file for generated logs."),
-                                          options: [NSLocalizedString("Dismiss")]).show()
+                            let alert = CriticalAlert(message: NSLocalizedString("Could not create zip file for generated logs."),
+                                          options: [NSLocalizedString("Dismiss")]
+                            )
+                            alert.show()
                         }
                         return
                     }
