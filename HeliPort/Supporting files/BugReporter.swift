@@ -98,12 +98,13 @@ class BugReporter {
 
         if appLog == .heliportCouldNotGetLogs || appLog == .scriptFailed {
             DispatchQueue.main.async {
-                let alert = CriticalAlert(message: NSLocalizedString("Error occurred while generating bug report."),
-                              informativeText: appLog == .heliportCouldNotGetLogs ?
-                                NSLocalizedString("Could not generate report for HeliPort.") :
-                                NSLocalizedString("Command failed to fetch logs for HeliPort."),
-                              options: [NSLocalizedString("Dismiss")],
-                              errorText: appLog
+                let alert = CriticalAlert(
+                    message: NSLocalizedString("Error occurred while generating bug report."),
+                    informativeText: appLog == .heliportCouldNotGetLogs ?
+                    NSLocalizedString("Could not generate report for HeliPort.") :
+                    NSLocalizedString("Command failed to fetch logs for HeliPort."),
+                    options: [NSLocalizedString("Dismiss")],
+                    errorText: appLog
                 )
                 alert.show()
             }
@@ -123,15 +124,17 @@ class BugReporter {
 
         if itlwmLog == .msgbufInsufficient || itlwmLog == .scriptFailed {
             DispatchQueue.main.async {
-                let alert = CriticalAlert(message: NSLocalizedString("Error occurred while generating bug report."),
-                              informativeText: itlwmLog == .msgbufInsufficient ?
-                                NSLocalizedString("Make sure you have installed `DebugEnhancer.kext`" +
-                                                  " before collecting logs for itlwm.") :
-                                NSLocalizedString("Could not read logs for `itlwm`." +
-                                                  " Make sure you allow `HeliPort` to read logs when prompted."),
-                              options: [NSLocalizedString("Dismiss"), NSLocalizedString("Open Documentation")],
-                              helpAnchor: .dmesgHelpURL,
-                              errorText: itlwmLog)
+                let alert = CriticalAlert(
+                    message: NSLocalizedString("Error occurred while generating bug report."),
+                    informativeText: itlwmLog == .msgbufInsufficient ?
+                    NSLocalizedString("Make sure you have installed `DebugEnhancer.kext`" +
+                                      " before collecting logs for itlwm.") :
+                    NSLocalizedString("Could not read logs for `itlwm`." +
+                                      " Make sure you allow `HeliPort` to read logs when prompted."),
+                    options: [NSLocalizedString("Dismiss"), NSLocalizedString("Open Documentation")],
+                    helpAnchor: .dmesgHelpURL,
+                    errorText: itlwmLog
+                )
 
                 if alert.show() == .alertSecondButtonReturn {
                     NSWorkspace.shared.open(URL(string: .dmesgHelpURL)!)
@@ -193,8 +196,9 @@ class BugReporter {
                     guard folderUrl != nil else {
                         Log.error("Could not get path to store bug report.")
                         DispatchQueue.main.async {
-                            let alert = CriticalAlert(message: NSLocalizedString("Could not get path to generate bug report."),
-                                                      options: ["Dismiss"]
+                            let alert = CriticalAlert(
+                                message: NSLocalizedString("Could not get path to generate bug report."),
+                                options: ["Dismiss"]
                             )
                             alert.show()
                         }
@@ -228,8 +232,9 @@ class BugReporter {
                     guard outputExitCode == 0 else {
                         Log.error("Could not create zip file: Exit code: \(outputExitCode)")
                         DispatchQueue.main.async {
-                            let alert = CriticalAlert(message: NSLocalizedString("Could not create zip file for generated logs."),
-                                          options: [NSLocalizedString("Dismiss")]
+                            let alert = CriticalAlert(
+                                message: NSLocalizedString("Could not create zip file for generated logs."),
+                                options: [NSLocalizedString("Dismiss")]
                             )
                             alert.show()
                         }
